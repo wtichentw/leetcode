@@ -6,28 +6,17 @@ class Solution {
         
         if (sum % 2 != 0) return false;
         
-        boolean[][] dp = new boolean[sum / 2 + 1][nums.length + 1];
+        // dp[i][j] means with i nums can we reach sum j
+        boolean[] dp = new boolean[sum / 2 + 1];
         
-        for (int i = 0; i <= sum / 2; i++) {
-            for (int j = 0; j <= nums.length; j++) {
-                if (i == 0) {
-                    dp[i][j] = true;
-                }
-                else if (j == 0) {
-                    dp[i][j] = false;
-                }
-                else {
-                    // enough weight
-                    if (i >= nums[j - 1]) 
-                        dp[i][j] = dp[i][j - 1] || dp[i - nums[j - 1]][j - 1];
-                    
-                    // not enough, just see whether without j'th item is okay or not
-                    else 
-                        dp[i][j] = dp[i][j - 1];
-                }
+        // skip first row by init
+        dp[0] = true;
+        for (int i = 1; i <= nums.length; i++) {
+            for (int j = sum / 2; j >= nums[i - 1]; j--) {
+                if (j >= nums[i - 1]) dp[j] = dp[j] || dp[j - nums[i - 1]];
             }
         }
-        
-        return dp[sum / 2][nums.length];
+            
+        return dp[sum / 2];
     }
 }
